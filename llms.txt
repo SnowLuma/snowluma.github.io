@@ -1,0 +1,747 @@
+# Docs
+
+- [介绍](/zh/docs/guide/introduction): SnowLuma 是什么、能做什么，以及它的三种使用形态与发行结构
+- [快速开始](/zh/docs/guide/quickstart): 一页弄清楚该走哪条部署路径，并完成最常见的 Docker 上手
+- 部署
+  - [部署](/zh/docs/guide/deploy): SnowLuma 各部署方式的对比与选择
+  - [Docker 部署](/zh/docs/guide/deploy/docker): 在 Linux 上用官方 Docker 镜像运行 SnowLuma
+  - [一键安装（实验性）](/zh/docs/guide/deploy/install): Alpha 安装脚本：独立 Docker、接入已有机器人网络、或进阶本机安装
+  - [Windows 手动部署](/zh/docs/guide/deploy/windows): 在原生 Windows 上直接运行 SnowLuma，hook 自动注入桌面版 QQ（QQ.exe）
+  - [Windows · Docker Desktop](/zh/docs/guide/deploy/windows-docker): 在 Windows 上通过 Docker Desktop（WSL2 后端）运行 SnowLuma 的 Linux 镜像
+  - [WSL2](/zh/docs/guide/deploy/wsl2): 在 Windows 的 WSL2 里运行 SnowLuma 的 Linux 容器
+  - [Linux 手动部署（进阶）](/zh/docs/guide/deploy/linux-manual): 不用 Docker，在 Linux 上手动复刻镜像内部流程运行 SnowLuma
+  - [手机部署（Android，实验性）](/zh/docs/guide/deploy/mobile): 在 Android 上通过 Termux + proot Ubuntu 手动跑 SnowLuma
+  - [宝塔面板部署](/zh/docs/guide/deploy/baota): 在已安装宝塔面板的 Linux 服务器上通过 Docker 应用商店一键部署 SnowLuma
+  - [更新](/zh/docs/guide/deploy/update): 在各部署路径下升级 SnowLuma，且不丢登录态与配置
+  - [Docker 持久化数据迁移](/zh/docs/guide/deploy/storage-migration): 将现有 Docker 数据安全迁移到当前持久化布局
+- [对接机器人](/zh/docs/guide/connect-bot): 把 SnowLuma 的 OneBot HTTP / WebSocket 接到 MaiBot、AstrBot、NoneBot
+- [配置参考](/zh/docs/guide/configuration): OneBot 实例配置与运行时配置文件结构
+- [排障](/zh/docs/guide/faq): 扫码、密码、端口、注入、镜像拉取的常见失败
+- [国内网络](/zh/docs/guide/china-network): Docker Hub、GitHub、QQ 安装包在大陆网络下怎么走
+- [开发者文档](/zh/docs/guide/developer): Monorepo 结构、核心启动链路与贡献注意事项
+- MCP
+  - [MCP 使用](/zh/docs/mcp): 把 SnowLuma 的 OneBot action 目录和可选执行能力接入 MCP 客户端
+- SDK
+  - [SDK](/zh/docs/sdk): @snowluma/sdk —— 类型完备的 OneBot 客户端，独立于 SnowLuma 运行时
+- API 参考
+  - [API 参考](/zh/docs/api): 从运行时动作目录生成的 OpenAPI：参数、应答、示例和试调
+  - 扩展: 扩展
+    - [删除群公告（fid 或 notice_id 二选一）](/zh/docs/api/extended/_del_group_notice)
+    - [获取指定 QQ 号正在使用的个性装扮（挂件/名片/来电/输入状态等）](/zh/docs/api/extended/_get_friend_dress): 装扮信息；目标未使用任何可查询装扮时 items 为空数组。网络失败、未登录态/风控、页面改版、返回账号与请求不一致时返回失败并附具体原因
+
+只读。
+    - [获取群公告](/zh/docs/api/extended/_get_group_notice): 普通公告与新成员公告的合并数组；send_to_new_members 标识后者；图片含 id、url、宽高
+
+只读。
+    - [获取机型展示（兼容 mock）](/zh/docs/api/extended/_get_model_show): 数组，每项含 variants（回显请求的机型名与 need_pay 标记）。
+
+只读。
+    - [标记全部已读](/zh/docs/api/extended/_mark_all_as_read)
+    - [发送群公告（支持置顶、弹窗、新成员、群昵称引导与确认）](/zh/docs/api/extended/_send_group_notice)
+    - [设置机型展示（占位）](/zh/docs/api/extended/_set_model_show)
+    - [分词（未实现）](/zh/docs/api/extended/.get_word_slices): 只读。
+    - [添加收藏表情](/zh/docs/api/extended/add_custom_face)
+    - [退出机器人](/zh/docs/api/extended/bot_exit)
+    - [取消群待办](/zh/docs/api/extended/cancel_group_todo)
+    - [检查链接安全性](/zh/docs/api/extended/check_url_safely): { level }：安全等级（占位实现，恒为 1）。
+
+只读。
+    - [清理缓存](/zh/docs/api/extended/clean_cache)
+    - [点击内联键盘按钮](/zh/docs/api/extended/click_inline_keyboard_button)
+    - [完成群待办](/zh/docs/api/extended/complete_group_todo)
+    - [创建收藏（未实现）](/zh/docs/api/extended/create_collection)
+    - [创建闪传任务](/zh/docs/api/extended/create_flash_task)
+    - [删除收藏表情](/zh/docs/api/extended/delete_custom_face)
+    - [移除精华消息](/zh/docs/api/extended/delete_essence_msg)
+    - [删除闪传文件](/zh/docs/api/extended/delete_flash_file)
+    - [删除群文件夹](/zh/docs/api/extended/delete_group_folder)
+    - [下载文件（url 或 base64）到 data/downloads](/zh/docs/api/extended/download_file): { file }
+    - [解析闪传文件下载直链（不下载，由调用方实现下载）](/zh/docs/api/extended/download_fileset): { url, file_name, file_size }
+    - [获取自定义表情](/zh/docs/api/extended/fetch_custom_face): 字符串数组：return_type=url 时为图片 URL，return_type=id 时为 emoji_id。
+
+只读。
+    - [获取自定义表情详情](/zh/docs/api/extended/fetch_custom_face_detail): 自定义表情详情数组，包含资源标识、图片地址、摘要与描述。
+
+只读。
+    - [获取表情回应用户（NapCat 分页）](/zh/docs/api/extended/fetch_emoji_like): 分页的表情回应用户列表（NapCat 形状），含分页游标 cookie 与首/末页标记。
+
+只读。
+    - [获取语音转文字结果](/zh/docs/api/extended/fetch_ptt_text): { text }：语音识别出的文本。
+
+别名：`get_ptt_text`, `get_record_text`
+
+只读。
+    - [转发单条消息给好友](/zh/docs/api/extended/forward_friend_single_msg)
+    - [转发单条消息到群](/zh/docs/api/extended/forward_group_single_msg)
+    - [好友拍一拍](/zh/docs/api/extended/friend_poke)
+    - [获取 AI 语音角色](/zh/docs/api/extended/get_ai_characters): 按分类分组的 AI 语音角色列表，每组含分类名与角色（id、名称、试听 URL）。
+
+只读。
+    - [生成 AI 语音](/zh/docs/api/extended/get_ai_record)
+    - [获取 clientkey](/zh/docs/api/extended/get_clientkey): { clientKey, expireTime, keyIndex }：clientkey 及其过期时间与索引。
+
+只读。
+    - [获取收藏列表](/zh/docs/api/extended/get_collection_list): 返回收藏条目、是否还有更多数据及底部时间游标。
+
+只读。
+    - [获取 Cookies](/zh/docs/api/extended/get_cookies): { cookies }：指定域名的 Cookie 字符串。
+
+只读。
+    - [获取凭证](/zh/docs/api/extended/get_credentials): { cookies, token, csrf_token }：Cookie 字符串与 CSRF 令牌（token 与 csrf_token 同值）。
+
+只读。
+    - [获取 CSRF 令牌](/zh/docs/api/extended/get_csrf_token): { token }：CSRF 令牌（bkn，数值）。
+
+只读。
+    - [获取可疑好友申请](/zh/docs/api/extended/get_doubt_friends_add_request): 可疑好友申请数组，每项含 uid（作为处理用 flag）、昵称、来源、留言与申请时间。
+
+只读。
+    - [获取表情回应用户](/zh/docs/api/extended/get_emoji_likes): { emoji_like_list }：回应该表情的用户列表（nick_name 恒为空串）。
+
+只读。
+    - [获取精华消息列表](/zh/docs/api/extended/get_essence_msg_list): 只读。
+    - [获取文件信息（仅图片/语音缓存；群文件请用 get_group_file_url）](/zh/docs/api/extended/get_file): 只读。
+    - [从 QQ 闪传分享码或官方分享链接获取 fileset_id](/zh/docs/api/extended/get_fileset_id): { fileset_id }：解析出的文件集 ID。
+
+只读。
+    - [获取文件集信息](/zh/docs/api/extended/get_fileset_info)
+    - [获取闪传文件列表](/zh/docs/api/extended/get_flash_file_list)
+    - [获取闪传文件链接](/zh/docs/api/extended/get_flash_file_url)
+    - [获取合并转发消息（id 或 message_id）](/zh/docs/api/extended/get_forward_msg): { messages }：转发内的消息节点数组（每项为 OneBot 消息事件，内部字段不固定）。
+
+只读。
+    - [获取好友消息历史（无锚点时从服务器获取最新双向记录）](/zh/docs/api/extended/get_friend_msg_history): { messages }：好友消息事件对象数组（每项为 OneBot 消息事件，内部字段不固定）。
+
+只读。
+    - [获取分组好友列表](/zh/docs/api/extended/get_friends_with_category): 好友分组数组；每组包含 categoryId、categoryName、categoryMbCount 和 buddyList。
+
+只读。
+    - [获取群 @全体成员 剩余次数](/zh/docs/api/extended/get_group_at_all_remain): { can_at_all, remain_at_all_count_for_group, remain_at_all_count_for_uin }：@全体可用性与剩余次数。
+
+只读。
+    - [获取群详细信息](/zh/docs/api/extended/get_group_detail_info): 只读。
+    - [获取群文件系统信息](/zh/docs/api/extended/get_group_file_system_info): { file_count, limit_count, used_space, total_space }：群文件数量与容量信息（均为服务端实际值）。
+
+只读。
+    - [获取被忽略的入群请求（NapCat）](/zh/docs/api/extended/get_group_ignore_add_request): 被忽略的入群请求数组（NapCat 字段命名），每项含请求序列、邀请人、群信息与处理标记。
+
+只读。
+    - [获取被过滤的入群请求](/zh/docs/api/extended/get_group_ignored_notifies): 被过滤的入群请求数组，每项含群号、申请人、邀请人、留言与处理标记。
+
+只读。
+    - [获取群信息（扩展）](/zh/docs/api/extended/get_group_info_ex): 只读。
+    - [获取群消息历史](/zh/docs/api/extended/get_group_msg_history): { messages }：群消息事件对象数组（每项为 OneBot 消息事件，内部字段不固定）。
+
+只读。
+    - [获取群禁言列表](/zh/docs/api/extended/get_group_shut_list): 仍在禁言中的成员数组，每项含 QQ 号、昵称与禁言到期时间戳（秒）。
+
+只读。
+    - [获取群今日打卡列表](/zh/docs/api/extended/get_group_signed_list): 只读。
+    - [获取群待办列表](/zh/docs/api/extended/get_group_todo_list): 群待办数组，包含可用于待办操作的消息标识、服务端摘要与时间
+
+只读。
+    - [获取图片信息](/zh/docs/api/extended/get_image): 只读。
+    - [获取小程序卡片 ark](/zh/docs/api/extended/get_mini_app_ark): 只读。
+    - [获取一条消息的全部表情回应](/zh/docs/api/extended/get_msg_emoji_likes): 该消息上每个表情回应的编号、数量与用户列表。
+
+只读。
+    - [获取在线客户端](/zh/docs/api/extended/get_online_clients): { clients }：QQ 本次会话最近推送的在线设备快照。
+
+只读。
+    - [获取资料点赞](/zh/docs/api/extended/get_profile_like): 点赞资料：uid、最近点赞时间、收藏与点赞统计及用户明细。
+
+只读。
+    - [获取最近会话（占位）](/zh/docs/api/extended/get_recent_contact): 占位实现，恒返回空数组。
+
+只读。
+    - [获取语音信息；传 out_format 则服务端转码并附带 base64](/zh/docs/api/extended/get_record): 只读。
+    - [获取下载 rkey](/zh/docs/api/extended/get_rkey): 别名：`nc_get_rkey`
+
+只读。
+    - [获取 rkey 服务器信息](/zh/docs/api/extended/get_rkey_server): { expired_time, name, private_rkey?, group_rkey? }：rkey 过期时间与（存在时的）私聊/群聊 rkey。
+
+只读。
+    - [获取文件分享链接](/zh/docs/api/extended/get_share_link)
+    - [获取单向好友列表](/zh/docs/api/extended/get_unidirectional_friend_list): 只读。
+    - [群拍一拍](/zh/docs/api/extended/group_poke)
+    - [列出当前账号的所有闪传文件集](/zh/docs/api/extended/list_filesets)
+    - [标记群消息已读](/zh/docs/api/extended/mark_group_msg_as_read)
+    - [标记消息已读（群聊/私聊自动路由）](/zh/docs/api/extended/mark_msg_as_read)
+    - [标记私聊消息已读](/zh/docs/api/extended/mark_private_msg_as_read)
+    - [修改收藏表情备注](/zh/docs/api/extended/modify_custom_face)
+    - [收藏表情移到最前](/zh/docs/api/extended/move_custom_face_to_front)
+    - [获取 packet 状态（占位）](/zh/docs/api/extended/nc_get_packet_status): 占位实现，恒返回 null。
+
+只读。
+    - [获取用户在线/扩展状态](/zh/docs/api/extended/nc_get_user_status): { status, ext_status }：用户在线状态码与扩展状态码。
+
+只读。
+    - [OCR 图片（服务端，需图片 URL 或已缓存的图片 file_id）](/zh/docs/api/extended/ocr_image): { texts, language }：识别文本数组（含置信度与坐标）与识别语言。
+
+别名：`.ocr_image`
+
+只读。
+    - [重命名闪传文件](/zh/docs/api/extended/rename_flash_file)
+    - [请求数据库解密密钥](/zh/docs/api/extended/request_decrypt_key)
+    - [分享用户/群 Ark 卡片（NapCat 标准名）](/zh/docs/api/extended/send_ark_share): { arkMsg }：服务端生成的推荐联系人 Ark 卡片 JSON 字符串。
+
+只读。
+    - [发送闪传消息（私聊或群聊，引用 fileset_id 让对端下载）](/zh/docs/api/extended/send_flash_msg): { message_id }
+    - [发送合并转发（按 message_type/群号自动路由）](/zh/docs/api/extended/send_forward_msg): { message_id, res_id, forward_id }
+    - [发送 AI 语音到群](/zh/docs/api/extended/send_group_ai_record): { message_id }：已发送 AI 语音的 OneBot 消息 ID。
+    - [分享群 Ark 卡片（NapCat 标准名）](/zh/docs/api/extended/send_group_ark_share): 服务端生成的群推荐 Ark 卡片 JSON 字符串。
+
+只读。
+    - [发送群合并转发](/zh/docs/api/extended/send_group_forward_msg): { message_id, res_id, forward_id }
+    - [点赞](/zh/docs/api/extended/send_like)
+    - [发送原始 SSO 包（cmd + hex data）](/zh/docs/api/extended/send_packet): 别名：`.send_packet`
+    - [拍一拍（群聊/私聊自动路由）](/zh/docs/api/extended/send_poke)
+    - [发送私聊合并转发](/zh/docs/api/extended/send_private_forward_msg): { message_id, res_id, forward_id }
+    - [发送图文 Ark 卡片（私聊/群聊）](/zh/docs/api/extended/send_tuwen_ark): null
+    - [设置自定义在线状态](/zh/docs/api/extended/set_diy_online_status)
+    - [处理可疑好友申请](/zh/docs/api/extended/set_doubt_friends_add_request)
+    - [设置精华消息](/zh/docs/api/extended/set_essence_msg)
+    - [设置好友备注](/zh/docs/api/extended/set_friend_remark)
+    - [移动好友到指定分组](/zh/docs/api/extended/set_friends_category): 成功时返回空数据。
+    - [群聊表情回应](/zh/docs/api/extended/set_group_reaction)
+    - [设置群备注](/zh/docs/api/extended/set_group_remark)
+    - [设置群机器人加群选项](/zh/docs/api/extended/set_group_robot_add_option)
+    - [群签到](/zh/docs/api/extended/set_group_sign): 别名：`send_group_sign`
+    - [设置群待办](/zh/docs/api/extended/set_group_todo)
+    - [设置输入状态](/zh/docs/api/extended/set_input_status)
+    - [设置消息表情回应](/zh/docs/api/extended/set_msg_emoji_like)
+    - [设置在线状态](/zh/docs/api/extended/set_online_status)
+    - [设置 QQ 头像](/zh/docs/api/extended/set_qq_avatar)
+    - [设置 QQ 资料](/zh/docs/api/extended/set_qq_profile)
+    - [重启（不支持）](/zh/docs/api/extended/set_restart)
+    - [设置个性签名（longNick/long_nick，严格 string）](/zh/docs/api/extended/set_self_longnick)
+    - [分享群 Ark 卡片](/zh/docs/api/extended/share_group_ex): 服务端生成的群推荐 Ark 卡片 JSON 字符串。
+
+只读。
+    - [分享用户/群 Ark 卡片](/zh/docs/api/extended/share_peer): { arkMsg }：服务端生成的推荐联系人 Ark 卡片 JSON 字符串。
+
+只读。
+    - [转存群文件](/zh/docs/api/extended/trans_group_file): { ok: true }
+    - [英译中](/zh/docs/api/extended/translate_en2zh): { words }：与输入等长的中文译文字符串数组。
+
+只读。
+    - [上传转发消息](/zh/docs/api/extended/upload_forward_msg)
+    - [上传转发消息（别名拼写）](/zh/docs/api/extended/upload_foward_msg)
+  - 信息: 信息
+    - [can_send_image](/zh/docs/api/system/can_send_image): 能力查询结果。
+
+只读。
+    - [can_send_record](/zh/docs/api/system/can_send_record): 能力查询结果。
+
+只读。
+    - [get_login_info](/zh/docs/api/system/get_login_info): 当前登录账号的 QQ 号与昵称。
+
+只读。
+    - [get_status](/zh/docs/api/system/get_status): 运行状态。`online` 表示账号在线；`good` 表示已确认的收发链路健康状态。
+
+只读。
+    - [get_version_info](/zh/docs/api/system/get_version_info): 实现与协议版本信息。
+
+只读。
+  - 群相册: 群相册
+    - [cancel_group_album_media_like](/zh/docs/api/group-album/cancel_group_album_media_like)
+    - [删除群相册图片或视频](/zh/docs/api/group-album/del_group_album_media)
+    - [do_group_album_comment](/zh/docs/api/group-album/do_group_album_comment)
+    - [get_group_album_list](/zh/docs/api/group-album/get_group_album_list): 群相册列表数组，每项为一个相册的基本信息。
+
+只读。
+    - [get_group_album_media_list](/zh/docs/api/group-album/get_group_album_media_list): 相册图片/视频列表及下一页分页游标；视频项包含 id、url、cover、尺寸、时长和多规格地址。
+
+只读。
+    - [get_qun_album_list](/zh/docs/api/group-album/get_qun_album_list): NapCat 风格的相册列表封套：{album_list, attach_info, has_more}。
+
+只读。
+    - [set_group_album_media_like](/zh/docs/api/group-album/set_group_album_media_like)
+    - [upload_image_to_qun_album](/zh/docs/api/group-album/upload_image_to_qun_album)
+    - [上传视频到群相册](/zh/docs/api/group-album/upload_video_to_qun_album): { id: string }
+  - 流式接口: 流式接口
+    - [清理流式传输临时文件(仅清理 stream 上传/下载目录)](/zh/docs/api/stream/clean_stream_temp_file): { message, removed }
+    - [以流式方式下载图片(缓存图片 id / URL / stream 目录本地文件)](/zh/docs/api/stream/download_file_image_stream): 流式帧:file_info → file_chunk* → file_complete
+    - [以流式方式下载语音(缓存语音 id / URL / stream 目录本地文件)](/zh/docs/api/stream/download_file_record_stream): 流式帧:file_info → file_chunk* → file_complete
+    - [以流式方式下载文件(stream 目录本地文件 / URL / 缓存媒体)](/zh/docs/api/stream/download_file_stream): 流式帧:file_info → file_chunk* → file_complete
+    - [测试下载流(推送 10 个数据帧,验证流式传输,不触达 QQ)](/zh/docs/api/stream/test_download_stream): 流式帧:data_chunk*10 → data_complete(error=true 时以 error 帧结束)
+    - [以流式分块方式上传文件到机器人本地(返回可用于发送的本地路径)](/zh/docs/api/stream/upload_file_stream): 流式帧:分块确认 type=stream、完成 type=response(含 file_path/file_name/file_size/sha256)
+  - 空间: 空间
+    - [评论一条说说（QQ 空间，支持纯文字或带图；传 images 自动上传）](/zh/docs/api/qzone/comment_qzone)
+    - [删除一条说说（QQ 空间，按 tid）](/zh/docs/api/qzone/delete_qzone_msg)
+    - [获取 QQ 空间好友动态（feed）；page_num 仅首页可靠，深翻页需时间游标（暂未实现）](/zh/docs/api/qzone/get_qzone_feeds): 好友动态对象，含本页 feed 数组与是否有更多页。
+
+只读。
+    - [获取 QQ 空间说说列表（默认机器人自己的空间）](/zh/docs/api/qzone/get_qzone_msg_list): 说说列表对象，含说说总数与本页说说数组。
+
+只读。
+    - [给一条说说点赞（QQ 空间）](/zh/docs/api/qzone/like_qzone)
+    - [发表说说（QQ 空间，支持纯文字或带图；传 images 自动上传；可设置查看权限）](/zh/docs/api/qzone/send_qzone_msg)
+    - [拉黑或解除拉黑某人（修改机器人自身 QQ 空间黑名单；enable=true 拉黑，false 解除）](/zh/docs/api/qzone/set_qzone_ban)
+    - [修改一条已发说说的查看权限（QQ 空间，按 tid）](/zh/docs/api/qzone/set_qzone_msg_right): 更新后的权限对象。
+    - [取消对一条说说的点赞（QQ 空间；取消赞端点待真机核实）](/zh/docs/api/qzone/unlike_qzone)
+  - 群文件: 群文件
+    - [创建群文件夹](/zh/docs/api/group-file/create_group_file_folder): { result: { retCode, retMsg }, groupItem: { folderInfo: { folderId, folderName, folderPath, createTime, modifyTime, createUin, modifyUin } } }
+    - [删除群文件](/zh/docs/api/group-file/delete_group_file)
+    - [删除群文件夹](/zh/docs/api/group-file/delete_group_file_folder)
+    - [获取群文件下载链接](/zh/docs/api/group-file/get_group_file_url): 群文件下载链接。
+
+只读。
+    - [获取群子目录文件列表](/zh/docs/api/group-file/get_group_files_by_folder): 群文件系统信息（文件与文件夹列表）。
+
+只读。
+    - [获取群根目录文件列表](/zh/docs/api/group-file/get_group_root_files): 群文件系统信息（文件与文件夹列表）。
+
+只读。
+    - [获取私聊文件下载链接](/zh/docs/api/group-file/get_private_file_url): 私聊文件下载链接。
+
+只读。
+    - [移动群文件](/zh/docs/api/group-file/move_group_file)
+    - [重命名群文件](/zh/docs/api/group-file/rename_group_file)
+    - [重命名群文件夹](/zh/docs/api/group-file/rename_group_file_folder)
+    - [上传群文件](/zh/docs/api/group-file/upload_group_file): { file_id: string }
+    - [上传私聊文件](/zh/docs/api/group-file/upload_private_file): { file_id: string }
+  - 好友: 好友
+    - [删除好友](/zh/docs/api/friend/delete_friend)
+    - [获取好友列表](/zh/docs/api/friend/get_friend_list): 好友列表数组，每项含 QQ 号、昵称与备注。
+
+只读。
+    - [获取陌生人信息](/zh/docs/api/friend/get_stranger_info): 用户资料：QQ 号、昵称、好友备注、性别、年龄与个性签名，命中资料时另含等级、企点标志与企业名称。
+
+只读。
+  - 消息: 消息
+    - [撤回消息](/zh/docs/api/message/delete_msg)
+    - [获取消息](/zh/docs/api/message/get_msg): 消息事件对象（首次收到时存储的副本，已去除 post_type/self_id、附带 real_id 字段并刷新图片 URL）。
+
+只读。
+    - [发送群消息](/zh/docs/api/message/send_group_msg): { message_id: number }
+    - [发送消息（按 message_type/群号 自动路由群聊或私聊）](/zh/docs/api/message/send_msg): { message_id: number }
+    - [发送私聊消息](/zh/docs/api/message/send_private_msg): { message_id: number }
+  - 系统表情: 系统表情
+    - [按编号查询 QQ 系统表情](/zh/docs/api/sys-face/fetch_face_entity): 表情详情；编号不存在时返回 null。
+
+只读。
+    - [判断 QQ 系统表情是否使用超级表情格式](/zh/docs/api/sys-face/fetch_super_face_id): 是否使用超级表情格式。
+
+只读。
+    - [获取 QQ 系统表情目录](/zh/docs/api/sys-face/fetch_sys_faces): 按分组返回完整的 QQ 系统表情映射。
+
+只读。
+    - [搜索 QQ 系统表情](/zh/docs/api/sys-face/search_sys_faces): 匹配编号、名称、别名或分组名的表情列表。
+
+只读。
+  - 群管理: 群管理
+    - [获取群管理设置的当前值](/zh/docs/api/group-admin/get_group_admin_settings): 与对应设置接口字段对齐的当前群管理设置。
+
+只读。
+    - [设置加群选项](/zh/docs/api/group-admin/set_group_add_option)
+    - [设置/取消管理员](/zh/docs/api/group-admin/set_group_admin)
+    - [匿名开关（未实现，返回 ok）](/zh/docs/api/group-admin/set_group_anonymous)
+    - [匿名禁言（未实现，返回 ok）](/zh/docs/api/group-admin/set_group_anonymous_ban)
+    - [禁言群成员（duration=0 解除）](/zh/docs/api/group-admin/set_group_ban)
+    - [设置群名片（空字符串清除）](/zh/docs/api/group-admin/set_group_card)
+    - [踢出群成员](/zh/docs/api/group-admin/set_group_kick)
+    - [批量踢出群成员](/zh/docs/api/group-admin/set_group_kick_members)
+    - [退群](/zh/docs/api/group-admin/set_group_leave)
+    - [设置群成员邀请策略](/zh/docs/api/group-admin/set_group_member_invite_policy)
+    - [设置群成员权限（仅群主可改）](/zh/docs/api/group-admin/set_group_member_permissions)
+    - [设置群名](/zh/docs/api/group-admin/set_group_name)
+    - [设置新成员是否可查看历史消息](/zh/docs/api/group-admin/set_group_new_member_history_visibility)
+    - [设置群头像](/zh/docs/api/group-admin/set_group_portrait)
+    - [设置群被搜索方式（群指纹 / 群号搜索开关）](/zh/docs/api/group-admin/set_group_search)
+    - [设置群头衔](/zh/docs/api/group-admin/set_group_special_title)
+    - [全员禁言开关](/zh/docs/api/group-admin/set_group_whole_ban)
+  - 群信息: 群信息
+    - [获取群荣誉信息](/zh/docs/api/group-info/get_group_honor_info): 只读。
+    - [获取群信息](/zh/docs/api/group-info/get_group_info): 群信息对象。
+
+只读。
+    - [获取群列表](/zh/docs/api/group-info/get_group_list): 群信息对象数组。
+
+只读。
+    - [获取群成员信息](/zh/docs/api/group-info/get_group_member_info): 群成员信息对象。
+
+只读。
+    - [获取群成员列表](/zh/docs/api/group-info/get_group_member_list): 群成员信息对象数组。
+
+只读。
+    - [获取群系统消息](/zh/docs/api/group-info/get_group_system_msg): 群系统消息数组，可按群号或未处理状态过滤。
+
+只读。
+  - 请求: 请求
+    - [处理好友添加请求](/zh/docs/api/request/set_friend_add_request)
+    - [处理加群请求](/zh/docs/api/request/set_group_add_request)
+
+# Docs
+
+- [Introduction](/en/docs/guide/introduction): What SnowLuma is, what you can do with it, and its three usage shapes and release layout
+- [Quick Start](/en/docs/guide/quickstart): Figure out which deployment path to take, then get the most common one (Docker) running
+- Deployment
+  - [Deployment](/en/docs/guide/deploy): Compare SnowLuma's deployment methods and pick one
+  - [Docker deployment](/en/docs/guide/deploy/docker): Run SnowLuma on Linux with the official Docker image
+  - [One-click install (experimental)](/en/docs/guide/deploy/install): Alpha installer for standalone Docker, sidecar compose, or advanced host install
+  - [Windows (manual)](/en/docs/guide/deploy/windows): Run SnowLuma natively on Windows — the hook auto-injects the desktop QQ client (QQ.exe)
+  - [Windows · Docker Desktop](/en/docs/guide/deploy/windows-docker): Run SnowLuma's Linux image on Windows via Docker Desktop's WSL2 backend
+  - [WSL2](/en/docs/guide/deploy/wsl2): Run SnowLuma's Linux container inside Windows Subsystem for Linux 2
+  - [Linux (manual, advanced)](/en/docs/guide/deploy/linux-manual): Run SnowLuma on Linux by replicating the Docker image's internals by hand
+  - [Mobile (Android, experimental)](/en/docs/guide/deploy/mobile): Run SnowLuma on Android via Termux + a proot Ubuntu userland
+  - [BT Panel Deploy](/en/docs/guide/deploy/baota): One-click deploy SnowLuma via Docker App Store on a Linux server with BT Panel (Baota)
+  - [Updating](/en/docs/guide/deploy/update): Upgrade SnowLuma on every deployment path without losing your login or config
+  - [Migrate Docker persistent data](/en/docs/guide/deploy/storage-migration): Safely move an existing Docker deployment to the current persistent storage layout
+- [Connect a bot](/en/docs/guide/connect-bot): Point MaiBot, AstrBot, or NoneBot at SnowLuma's OneBot HTTP and WebSocket
+- [Configuration](/en/docs/guide/configuration): OneBot instance config and runtime config file reference
+- [Troubleshooting](/en/docs/guide/faq): QR login, passwords, ports, injection, and image pulls
+- [Networks in China](/en/docs/guide/china-network): Docker Hub, GitHub, and QQ packages on mainland networks
+- [Developer guide](/en/docs/guide/developer): Monorepo layout, runtime startup chain, and contribution notes
+- MCP
+  - [MCP Usage](/en/docs/mcp): Connect SnowLuma's OneBot action catalog and optional execution tools to MCP clients
+- SDK
+  - [SDK](/en/docs/sdk): @snowluma/sdk — a typed OneBot client, independent of the SnowLuma runtime
+- API reference
+  - [API reference](/en/docs/api): OpenAPI generated from the runtime catalog — parameters, responses, examples, and try-it
+  - 扩展: 扩展
+    - [删除群公告（fid 或 notice_id 二选一）](/en/docs/api/extended/_del_group_notice)
+    - [获取指定 QQ 号正在使用的个性装扮（挂件/名片/来电/输入状态等）](/en/docs/api/extended/_get_friend_dress): 装扮信息；目标未使用任何可查询装扮时 items 为空数组。网络失败、未登录态/风控、页面改版、返回账号与请求不一致时返回失败并附具体原因
+
+只读。
+    - [获取群公告](/en/docs/api/extended/_get_group_notice): 普通公告与新成员公告的合并数组；send_to_new_members 标识后者；图片含 id、url、宽高
+
+只读。
+    - [获取机型展示（兼容 mock）](/en/docs/api/extended/_get_model_show): 数组，每项含 variants（回显请求的机型名与 need_pay 标记）。
+
+只读。
+    - [标记全部已读](/en/docs/api/extended/_mark_all_as_read)
+    - [发送群公告（支持置顶、弹窗、新成员、群昵称引导与确认）](/en/docs/api/extended/_send_group_notice)
+    - [设置机型展示（占位）](/en/docs/api/extended/_set_model_show)
+    - [分词（未实现）](/en/docs/api/extended/.get_word_slices): 只读。
+    - [添加收藏表情](/en/docs/api/extended/add_custom_face)
+    - [退出机器人](/en/docs/api/extended/bot_exit)
+    - [取消群待办](/en/docs/api/extended/cancel_group_todo)
+    - [检查链接安全性](/en/docs/api/extended/check_url_safely): { level }：安全等级（占位实现，恒为 1）。
+
+只读。
+    - [清理缓存](/en/docs/api/extended/clean_cache)
+    - [点击内联键盘按钮](/en/docs/api/extended/click_inline_keyboard_button)
+    - [完成群待办](/en/docs/api/extended/complete_group_todo)
+    - [创建收藏（未实现）](/en/docs/api/extended/create_collection)
+    - [创建闪传任务](/en/docs/api/extended/create_flash_task)
+    - [删除收藏表情](/en/docs/api/extended/delete_custom_face)
+    - [移除精华消息](/en/docs/api/extended/delete_essence_msg)
+    - [删除闪传文件](/en/docs/api/extended/delete_flash_file)
+    - [删除群文件夹](/en/docs/api/extended/delete_group_folder)
+    - [下载文件（url 或 base64）到 data/downloads](/en/docs/api/extended/download_file): { file }
+    - [解析闪传文件下载直链（不下载，由调用方实现下载）](/en/docs/api/extended/download_fileset): { url, file_name, file_size }
+    - [获取自定义表情](/en/docs/api/extended/fetch_custom_face): 字符串数组：return_type=url 时为图片 URL，return_type=id 时为 emoji_id。
+
+只读。
+    - [获取自定义表情详情](/en/docs/api/extended/fetch_custom_face_detail): 自定义表情详情数组，包含资源标识、图片地址、摘要与描述。
+
+只读。
+    - [获取表情回应用户（NapCat 分页）](/en/docs/api/extended/fetch_emoji_like): 分页的表情回应用户列表（NapCat 形状），含分页游标 cookie 与首/末页标记。
+
+只读。
+    - [获取语音转文字结果](/en/docs/api/extended/fetch_ptt_text): { text }：语音识别出的文本。
+
+别名：`get_ptt_text`, `get_record_text`
+
+只读。
+    - [转发单条消息给好友](/en/docs/api/extended/forward_friend_single_msg)
+    - [转发单条消息到群](/en/docs/api/extended/forward_group_single_msg)
+    - [好友拍一拍](/en/docs/api/extended/friend_poke)
+    - [获取 AI 语音角色](/en/docs/api/extended/get_ai_characters): 按分类分组的 AI 语音角色列表，每组含分类名与角色（id、名称、试听 URL）。
+
+只读。
+    - [生成 AI 语音](/en/docs/api/extended/get_ai_record)
+    - [获取 clientkey](/en/docs/api/extended/get_clientkey): { clientKey, expireTime, keyIndex }：clientkey 及其过期时间与索引。
+
+只读。
+    - [获取收藏列表](/en/docs/api/extended/get_collection_list): 返回收藏条目、是否还有更多数据及底部时间游标。
+
+只读。
+    - [获取 Cookies](/en/docs/api/extended/get_cookies): { cookies }：指定域名的 Cookie 字符串。
+
+只读。
+    - [获取凭证](/en/docs/api/extended/get_credentials): { cookies, token, csrf_token }：Cookie 字符串与 CSRF 令牌（token 与 csrf_token 同值）。
+
+只读。
+    - [获取 CSRF 令牌](/en/docs/api/extended/get_csrf_token): { token }：CSRF 令牌（bkn，数值）。
+
+只读。
+    - [获取可疑好友申请](/en/docs/api/extended/get_doubt_friends_add_request): 可疑好友申请数组，每项含 uid（作为处理用 flag）、昵称、来源、留言与申请时间。
+
+只读。
+    - [获取表情回应用户](/en/docs/api/extended/get_emoji_likes): { emoji_like_list }：回应该表情的用户列表（nick_name 恒为空串）。
+
+只读。
+    - [获取精华消息列表](/en/docs/api/extended/get_essence_msg_list): 只读。
+    - [获取文件信息（仅图片/语音缓存；群文件请用 get_group_file_url）](/en/docs/api/extended/get_file): 只读。
+    - [从 QQ 闪传分享码或官方分享链接获取 fileset_id](/en/docs/api/extended/get_fileset_id): { fileset_id }：解析出的文件集 ID。
+
+只读。
+    - [获取文件集信息](/en/docs/api/extended/get_fileset_info)
+    - [获取闪传文件列表](/en/docs/api/extended/get_flash_file_list)
+    - [获取闪传文件链接](/en/docs/api/extended/get_flash_file_url)
+    - [获取合并转发消息（id 或 message_id）](/en/docs/api/extended/get_forward_msg): { messages }：转发内的消息节点数组（每项为 OneBot 消息事件，内部字段不固定）。
+
+只读。
+    - [获取好友消息历史（无锚点时从服务器获取最新双向记录）](/en/docs/api/extended/get_friend_msg_history): { messages }：好友消息事件对象数组（每项为 OneBot 消息事件，内部字段不固定）。
+
+只读。
+    - [获取分组好友列表](/en/docs/api/extended/get_friends_with_category): 好友分组数组；每组包含 categoryId、categoryName、categoryMbCount 和 buddyList。
+
+只读。
+    - [获取群 @全体成员 剩余次数](/en/docs/api/extended/get_group_at_all_remain): { can_at_all, remain_at_all_count_for_group, remain_at_all_count_for_uin }：@全体可用性与剩余次数。
+
+只读。
+    - [获取群详细信息](/en/docs/api/extended/get_group_detail_info): 只读。
+    - [获取群文件系统信息](/en/docs/api/extended/get_group_file_system_info): { file_count, limit_count, used_space, total_space }：群文件数量与容量信息（均为服务端实际值）。
+
+只读。
+    - [获取被忽略的入群请求（NapCat）](/en/docs/api/extended/get_group_ignore_add_request): 被忽略的入群请求数组（NapCat 字段命名），每项含请求序列、邀请人、群信息与处理标记。
+
+只读。
+    - [获取被过滤的入群请求](/en/docs/api/extended/get_group_ignored_notifies): 被过滤的入群请求数组，每项含群号、申请人、邀请人、留言与处理标记。
+
+只读。
+    - [获取群信息（扩展）](/en/docs/api/extended/get_group_info_ex): 只读。
+    - [获取群消息历史](/en/docs/api/extended/get_group_msg_history): { messages }：群消息事件对象数组（每项为 OneBot 消息事件，内部字段不固定）。
+
+只读。
+    - [获取群禁言列表](/en/docs/api/extended/get_group_shut_list): 仍在禁言中的成员数组，每项含 QQ 号、昵称与禁言到期时间戳（秒）。
+
+只读。
+    - [获取群今日打卡列表](/en/docs/api/extended/get_group_signed_list): 只读。
+    - [获取群待办列表](/en/docs/api/extended/get_group_todo_list): 群待办数组，包含可用于待办操作的消息标识、服务端摘要与时间
+
+只读。
+    - [获取图片信息](/en/docs/api/extended/get_image): 只读。
+    - [获取小程序卡片 ark](/en/docs/api/extended/get_mini_app_ark): 只读。
+    - [获取一条消息的全部表情回应](/en/docs/api/extended/get_msg_emoji_likes): 该消息上每个表情回应的编号、数量与用户列表。
+
+只读。
+    - [获取在线客户端](/en/docs/api/extended/get_online_clients): { clients }：QQ 本次会话最近推送的在线设备快照。
+
+只读。
+    - [获取资料点赞](/en/docs/api/extended/get_profile_like): 点赞资料：uid、最近点赞时间、收藏与点赞统计及用户明细。
+
+只读。
+    - [获取最近会话（占位）](/en/docs/api/extended/get_recent_contact): 占位实现，恒返回空数组。
+
+只读。
+    - [获取语音信息；传 out_format 则服务端转码并附带 base64](/en/docs/api/extended/get_record): 只读。
+    - [获取下载 rkey](/en/docs/api/extended/get_rkey): 别名：`nc_get_rkey`
+
+只读。
+    - [获取 rkey 服务器信息](/en/docs/api/extended/get_rkey_server): { expired_time, name, private_rkey?, group_rkey? }：rkey 过期时间与（存在时的）私聊/群聊 rkey。
+
+只读。
+    - [获取文件分享链接](/en/docs/api/extended/get_share_link)
+    - [获取单向好友列表](/en/docs/api/extended/get_unidirectional_friend_list): 只读。
+    - [群拍一拍](/en/docs/api/extended/group_poke)
+    - [列出当前账号的所有闪传文件集](/en/docs/api/extended/list_filesets)
+    - [标记群消息已读](/en/docs/api/extended/mark_group_msg_as_read)
+    - [标记消息已读（群聊/私聊自动路由）](/en/docs/api/extended/mark_msg_as_read)
+    - [标记私聊消息已读](/en/docs/api/extended/mark_private_msg_as_read)
+    - [修改收藏表情备注](/en/docs/api/extended/modify_custom_face)
+    - [收藏表情移到最前](/en/docs/api/extended/move_custom_face_to_front)
+    - [获取 packet 状态（占位）](/en/docs/api/extended/nc_get_packet_status): 占位实现，恒返回 null。
+
+只读。
+    - [获取用户在线/扩展状态](/en/docs/api/extended/nc_get_user_status): { status, ext_status }：用户在线状态码与扩展状态码。
+
+只读。
+    - [OCR 图片（服务端，需图片 URL 或已缓存的图片 file_id）](/en/docs/api/extended/ocr_image): { texts, language }：识别文本数组（含置信度与坐标）与识别语言。
+
+别名：`.ocr_image`
+
+只读。
+    - [重命名闪传文件](/en/docs/api/extended/rename_flash_file)
+    - [请求数据库解密密钥](/en/docs/api/extended/request_decrypt_key)
+    - [分享用户/群 Ark 卡片（NapCat 标准名）](/en/docs/api/extended/send_ark_share): { arkMsg }：服务端生成的推荐联系人 Ark 卡片 JSON 字符串。
+
+只读。
+    - [发送闪传消息（私聊或群聊，引用 fileset_id 让对端下载）](/en/docs/api/extended/send_flash_msg): { message_id }
+    - [发送合并转发（按 message_type/群号自动路由）](/en/docs/api/extended/send_forward_msg): { message_id, res_id, forward_id }
+    - [发送 AI 语音到群](/en/docs/api/extended/send_group_ai_record): { message_id }：已发送 AI 语音的 OneBot 消息 ID。
+    - [分享群 Ark 卡片（NapCat 标准名）](/en/docs/api/extended/send_group_ark_share): 服务端生成的群推荐 Ark 卡片 JSON 字符串。
+
+只读。
+    - [发送群合并转发](/en/docs/api/extended/send_group_forward_msg): { message_id, res_id, forward_id }
+    - [点赞](/en/docs/api/extended/send_like)
+    - [发送原始 SSO 包（cmd + hex data）](/en/docs/api/extended/send_packet): 别名：`.send_packet`
+    - [拍一拍（群聊/私聊自动路由）](/en/docs/api/extended/send_poke)
+    - [发送私聊合并转发](/en/docs/api/extended/send_private_forward_msg): { message_id, res_id, forward_id }
+    - [发送图文 Ark 卡片（私聊/群聊）](/en/docs/api/extended/send_tuwen_ark): null
+    - [设置自定义在线状态](/en/docs/api/extended/set_diy_online_status)
+    - [处理可疑好友申请](/en/docs/api/extended/set_doubt_friends_add_request)
+    - [设置精华消息](/en/docs/api/extended/set_essence_msg)
+    - [设置好友备注](/en/docs/api/extended/set_friend_remark)
+    - [移动好友到指定分组](/en/docs/api/extended/set_friends_category): 成功时返回空数据。
+    - [群聊表情回应](/en/docs/api/extended/set_group_reaction)
+    - [设置群备注](/en/docs/api/extended/set_group_remark)
+    - [设置群机器人加群选项](/en/docs/api/extended/set_group_robot_add_option)
+    - [群签到](/en/docs/api/extended/set_group_sign): 别名：`send_group_sign`
+    - [设置群待办](/en/docs/api/extended/set_group_todo)
+    - [设置输入状态](/en/docs/api/extended/set_input_status)
+    - [设置消息表情回应](/en/docs/api/extended/set_msg_emoji_like)
+    - [设置在线状态](/en/docs/api/extended/set_online_status)
+    - [设置 QQ 头像](/en/docs/api/extended/set_qq_avatar)
+    - [设置 QQ 资料](/en/docs/api/extended/set_qq_profile)
+    - [重启（不支持）](/en/docs/api/extended/set_restart)
+    - [设置个性签名（longNick/long_nick，严格 string）](/en/docs/api/extended/set_self_longnick)
+    - [分享群 Ark 卡片](/en/docs/api/extended/share_group_ex): 服务端生成的群推荐 Ark 卡片 JSON 字符串。
+
+只读。
+    - [分享用户/群 Ark 卡片](/en/docs/api/extended/share_peer): { arkMsg }：服务端生成的推荐联系人 Ark 卡片 JSON 字符串。
+
+只读。
+    - [转存群文件](/en/docs/api/extended/trans_group_file): { ok: true }
+    - [英译中](/en/docs/api/extended/translate_en2zh): { words }：与输入等长的中文译文字符串数组。
+
+只读。
+    - [上传转发消息](/en/docs/api/extended/upload_forward_msg)
+    - [上传转发消息（别名拼写）](/en/docs/api/extended/upload_foward_msg)
+  - 好友: 好友
+    - [删除好友](/en/docs/api/friend/delete_friend)
+    - [获取好友列表](/en/docs/api/friend/get_friend_list): 好友列表数组，每项含 QQ 号、昵称与备注。
+
+只读。
+    - [获取陌生人信息](/en/docs/api/friend/get_stranger_info): 用户资料：QQ 号、昵称、好友备注、性别、年龄与个性签名，命中资料时另含等级、企点标志与企业名称。
+
+只读。
+  - 群管理: 群管理
+    - [获取群管理设置的当前值](/en/docs/api/group-admin/get_group_admin_settings): 与对应设置接口字段对齐的当前群管理设置。
+
+只读。
+    - [设置加群选项](/en/docs/api/group-admin/set_group_add_option)
+    - [设置/取消管理员](/en/docs/api/group-admin/set_group_admin)
+    - [匿名开关（未实现，返回 ok）](/en/docs/api/group-admin/set_group_anonymous)
+    - [匿名禁言（未实现，返回 ok）](/en/docs/api/group-admin/set_group_anonymous_ban)
+    - [禁言群成员（duration=0 解除）](/en/docs/api/group-admin/set_group_ban)
+    - [设置群名片（空字符串清除）](/en/docs/api/group-admin/set_group_card)
+    - [踢出群成员](/en/docs/api/group-admin/set_group_kick)
+    - [批量踢出群成员](/en/docs/api/group-admin/set_group_kick_members)
+    - [退群](/en/docs/api/group-admin/set_group_leave)
+    - [设置群成员邀请策略](/en/docs/api/group-admin/set_group_member_invite_policy)
+    - [设置群成员权限（仅群主可改）](/en/docs/api/group-admin/set_group_member_permissions)
+    - [设置群名](/en/docs/api/group-admin/set_group_name)
+    - [设置新成员是否可查看历史消息](/en/docs/api/group-admin/set_group_new_member_history_visibility)
+    - [设置群头像](/en/docs/api/group-admin/set_group_portrait)
+    - [设置群被搜索方式（群指纹 / 群号搜索开关）](/en/docs/api/group-admin/set_group_search)
+    - [设置群头衔](/en/docs/api/group-admin/set_group_special_title)
+    - [全员禁言开关](/en/docs/api/group-admin/set_group_whole_ban)
+  - 群相册: 群相册
+    - [cancel_group_album_media_like](/en/docs/api/group-album/cancel_group_album_media_like)
+    - [删除群相册图片或视频](/en/docs/api/group-album/del_group_album_media)
+    - [do_group_album_comment](/en/docs/api/group-album/do_group_album_comment)
+    - [get_group_album_list](/en/docs/api/group-album/get_group_album_list): 群相册列表数组，每项为一个相册的基本信息。
+
+只读。
+    - [get_group_album_media_list](/en/docs/api/group-album/get_group_album_media_list): 相册图片/视频列表及下一页分页游标；视频项包含 id、url、cover、尺寸、时长和多规格地址。
+
+只读。
+    - [get_qun_album_list](/en/docs/api/group-album/get_qun_album_list): NapCat 风格的相册列表封套：{album_list, attach_info, has_more}。
+
+只读。
+    - [set_group_album_media_like](/en/docs/api/group-album/set_group_album_media_like)
+    - [upload_image_to_qun_album](/en/docs/api/group-album/upload_image_to_qun_album)
+    - [上传视频到群相册](/en/docs/api/group-album/upload_video_to_qun_album): { id: string }
+  - 群文件: 群文件
+    - [创建群文件夹](/en/docs/api/group-file/create_group_file_folder): { result: { retCode, retMsg }, groupItem: { folderInfo: { folderId, folderName, folderPath, createTime, modifyTime, createUin, modifyUin } } }
+    - [删除群文件](/en/docs/api/group-file/delete_group_file)
+    - [删除群文件夹](/en/docs/api/group-file/delete_group_file_folder)
+    - [获取群文件下载链接](/en/docs/api/group-file/get_group_file_url): 群文件下载链接。
+
+只读。
+    - [获取群子目录文件列表](/en/docs/api/group-file/get_group_files_by_folder): 群文件系统信息（文件与文件夹列表）。
+
+只读。
+    - [获取群根目录文件列表](/en/docs/api/group-file/get_group_root_files): 群文件系统信息（文件与文件夹列表）。
+
+只读。
+    - [获取私聊文件下载链接](/en/docs/api/group-file/get_private_file_url): 私聊文件下载链接。
+
+只读。
+    - [移动群文件](/en/docs/api/group-file/move_group_file)
+    - [重命名群文件](/en/docs/api/group-file/rename_group_file)
+    - [重命名群文件夹](/en/docs/api/group-file/rename_group_file_folder)
+    - [上传群文件](/en/docs/api/group-file/upload_group_file): { file_id: string }
+    - [上传私聊文件](/en/docs/api/group-file/upload_private_file): { file_id: string }
+  - 群信息: 群信息
+    - [获取群荣誉信息](/en/docs/api/group-info/get_group_honor_info): 只读。
+    - [获取群信息](/en/docs/api/group-info/get_group_info): 群信息对象。
+
+只读。
+    - [获取群列表](/en/docs/api/group-info/get_group_list): 群信息对象数组。
+
+只读。
+    - [获取群成员信息](/en/docs/api/group-info/get_group_member_info): 群成员信息对象。
+
+只读。
+    - [获取群成员列表](/en/docs/api/group-info/get_group_member_list): 群成员信息对象数组。
+
+只读。
+    - [获取群系统消息](/en/docs/api/group-info/get_group_system_msg): 群系统消息数组，可按群号或未处理状态过滤。
+
+只读。
+  - 消息: 消息
+    - [撤回消息](/en/docs/api/message/delete_msg)
+    - [获取消息](/en/docs/api/message/get_msg): 消息事件对象（首次收到时存储的副本，已去除 post_type/self_id、附带 real_id 字段并刷新图片 URL）。
+
+只读。
+    - [发送群消息](/en/docs/api/message/send_group_msg): { message_id: number }
+    - [发送消息（按 message_type/群号 自动路由群聊或私聊）](/en/docs/api/message/send_msg): { message_id: number }
+    - [发送私聊消息](/en/docs/api/message/send_private_msg): { message_id: number }
+  - 空间: 空间
+    - [评论一条说说（QQ 空间，支持纯文字或带图；传 images 自动上传）](/en/docs/api/qzone/comment_qzone)
+    - [删除一条说说（QQ 空间，按 tid）](/en/docs/api/qzone/delete_qzone_msg)
+    - [获取 QQ 空间好友动态（feed）；page_num 仅首页可靠，深翻页需时间游标（暂未实现）](/en/docs/api/qzone/get_qzone_feeds): 好友动态对象，含本页 feed 数组与是否有更多页。
+
+只读。
+    - [获取 QQ 空间说说列表（默认机器人自己的空间）](/en/docs/api/qzone/get_qzone_msg_list): 说说列表对象，含说说总数与本页说说数组。
+
+只读。
+    - [给一条说说点赞（QQ 空间）](/en/docs/api/qzone/like_qzone)
+    - [发表说说（QQ 空间，支持纯文字或带图；传 images 自动上传；可设置查看权限）](/en/docs/api/qzone/send_qzone_msg)
+    - [拉黑或解除拉黑某人（修改机器人自身 QQ 空间黑名单；enable=true 拉黑，false 解除）](/en/docs/api/qzone/set_qzone_ban)
+    - [修改一条已发说说的查看权限（QQ 空间，按 tid）](/en/docs/api/qzone/set_qzone_msg_right): 更新后的权限对象。
+    - [取消对一条说说的点赞（QQ 空间；取消赞端点待真机核实）](/en/docs/api/qzone/unlike_qzone)
+  - 请求: 请求
+    - [处理好友添加请求](/en/docs/api/request/set_friend_add_request)
+    - [处理加群请求](/en/docs/api/request/set_group_add_request)
+  - 流式接口: 流式接口
+    - [清理流式传输临时文件(仅清理 stream 上传/下载目录)](/en/docs/api/stream/clean_stream_temp_file): { message, removed }
+    - [以流式方式下载图片(缓存图片 id / URL / stream 目录本地文件)](/en/docs/api/stream/download_file_image_stream): 流式帧:file_info → file_chunk* → file_complete
+    - [以流式方式下载语音(缓存语音 id / URL / stream 目录本地文件)](/en/docs/api/stream/download_file_record_stream): 流式帧:file_info → file_chunk* → file_complete
+    - [以流式方式下载文件(stream 目录本地文件 / URL / 缓存媒体)](/en/docs/api/stream/download_file_stream): 流式帧:file_info → file_chunk* → file_complete
+    - [测试下载流(推送 10 个数据帧,验证流式传输,不触达 QQ)](/en/docs/api/stream/test_download_stream): 流式帧:data_chunk*10 → data_complete(error=true 时以 error 帧结束)
+    - [以流式分块方式上传文件到机器人本地(返回可用于发送的本地路径)](/en/docs/api/stream/upload_file_stream): 流式帧:分块确认 type=stream、完成 type=response(含 file_path/file_name/file_size/sha256)
+  - 系统表情: 系统表情
+    - [按编号查询 QQ 系统表情](/en/docs/api/sys-face/fetch_face_entity): 表情详情；编号不存在时返回 null。
+
+只读。
+    - [判断 QQ 系统表情是否使用超级表情格式](/en/docs/api/sys-face/fetch_super_face_id): 是否使用超级表情格式。
+
+只读。
+    - [获取 QQ 系统表情目录](/en/docs/api/sys-face/fetch_sys_faces): 按分组返回完整的 QQ 系统表情映射。
+
+只读。
+    - [搜索 QQ 系统表情](/en/docs/api/sys-face/search_sys_faces): 匹配编号、名称、别名或分组名的表情列表。
+
+只读。
+  - 信息: 信息
+    - [can_send_image](/en/docs/api/system/can_send_image): 能力查询结果。
+
+只读。
+    - [can_send_record](/en/docs/api/system/can_send_record): 能力查询结果。
+
+只读。
+    - [get_login_info](/en/docs/api/system/get_login_info): 当前登录账号的 QQ 号与昵称。
+
+只读。
+    - [get_status](/en/docs/api/system/get_status): 运行状态。`online` 表示账号在线；`good` 表示已确认的收发链路健康状态。
+
+只读。
+    - [get_version_info](/en/docs/api/system/get_version_info): 实现与协议版本信息。
+
+只读。

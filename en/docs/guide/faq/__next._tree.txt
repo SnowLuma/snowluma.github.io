@@ -1,0 +1,6 @@
+:HL["/_next/static/chunks/43sw-f65sp9jq.css","style"]
+:HL["/_next/static/chunks/41ex1jhse839v.css","style"]
+:HL["/_next/static/chunks/3qt-iat4q3cgc.css","style"]
+:HL["/_next/static/media/f112ed7f0b91582f-s.p.2xkduggpvd1-n.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/feb57b2dc8f29018-s.p.3qy4m29-cg3o4.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+0:{"tree":{"name":"","param":null,"prefetchHints":4176,"slots":{"children":{"name":"lang","param":{"type":"d","key":"en","siblings":["api","llms-full.txt","llms.txt"]},"prefetchHints":4208,"slots":{"children":{"name":"docs","param":null,"prefetchHints":4128,"slots":{"children":{"name":"slug","param":{"type":"oc","key":"guide/faq","siblings":[]},"prefetchHints":4160,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}}}}}},"staleTime":300,"buildId":"j-CGcDS3MeEO4XEeTqdgf"}
